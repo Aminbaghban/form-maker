@@ -1,0 +1,54 @@
+{
+  "name": "@aminbaghbanzadeh/form-maker",
+  "version": "1.1.56",
+  "description": "This is simple form generator based on Chakra UI and yup by simply passing yup schema if you want more information please be in touch with me by my email address aminslkbgh@gmail.com",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c"
+  },
+  "keywords": [
+    "form-generator",
+    "chakra",
+    "yup",
+    "formGenerator"
+  ],
+  "author": "Amin Baghbanzadeh <aminslkbgh@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@types/react": "^17.0.18",
+    "@types/react-input-mask": "^3.0.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.56.2",
+    "rollup-plugin-dts": "^3.0.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^2.8.8"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": "^2.0.0",
+    "axios": "^0.27.2",
+    "i18next": "^21.8.5",
+    "react": "18.0.0",
+    "react-hook-form": "^7.30.0",
+    "react-i18next": "^11.16.9",
+    "react-icons": "^4.3.1",
+    "react-input-mask": "^2.0.4",
+    "react-query": "^3.38.1",
+    "yup": "^0.32.11",
+    "i18next-http-backend": "^1.4.1",
+    "@tinymce/tinymce-react": "^4.1.00"
+  }
+}
