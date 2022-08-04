@@ -3,9 +3,13 @@ import React$1, { PropsWithChildren, MouseEventHandler, FC } from 'react';
 import { NumberInputProps as NumberInputProps$1, CheckboxProps as CheckboxProps$1, SelectProps as SelectProps$1, RangeSliderProps, SwitchProps as SwitchProps$1, TextareaProps as TextareaProps$1, InputProps, UsePinInputProps, FormControlProps as FormControlProps$1, ButtonOptions } from '@chakra-ui/react';
 import { FieldError, FieldErrors, Control } from 'react-hook-form';
 import { IconType } from 'react-icons';
+import { UploaderProps } from '@aminbaghbanzadeh/chakra-file-uploader';
+import { AsyncPaginateProps } from 'react-select-async-paginate';
 import { SchemaObjectDescription } from 'yup/lib/schema';
 import { AxiosResponse } from 'axios';
+import * as yup from 'yup';
 import { ObjectSchema } from 'yup';
+import * as yup_lib_types from 'yup/lib/types';
 
 interface NumberInputProps extends NumberInputProps$1 {
 }
@@ -13,12 +17,12 @@ interface NumberInputProps extends NumberInputProps$1 {
 interface CheckboxProps extends CheckboxProps$1 {
 }
 
-interface SelectOption {
+interface SelectOption$1 {
     label: string;
     value: string | number;
 }
 interface SelectProps extends SelectProps$1 {
-    options?: SelectOption[];
+    options?: SelectOption$1[];
     fetchUrl?: string;
     valueProperty?: string;
     labelProperty?: string;
@@ -43,13 +47,34 @@ interface PinInputProps extends UsePinInputProps {
     isInvalid?: boolean;
 }
 
-declare type FormControlType = 'input-text' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor';
+interface SelectOption {
+    label: string;
+    value: string | number;
+}
+interface GroupBase<Option> {
+    readonly options: readonly Option[];
+    readonly label?: string;
+}
+interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, GroupBase<SelectOption>, undefined, true> {
+    options?: SelectOption[];
+    fetchUrl?: string;
+    valueProperty?: string;
+    labelProperty?: string;
+    searchQueryFieldName?: string;
+    offsetQueryFieldName?: string;
+    resultFieldName?: string;
+    totalCountFieldName?: string;
+    isInvalid?: boolean;
+}
+
+declare type FormControlType = 'input-text' | 'input-tag' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor' | 'uploader' | 'reach-select';
 interface FormControlSetting extends FormControlProps$1 {
     type: FormControlType;
-    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps;
+    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps | UploaderProps | AsyncSelectProps;
     placeHolder?: string;
     helperText?: string;
     hideLabel?: boolean;
+    valueConverter?: (arg: any) => any;
 }
 interface FormControlProps {
     name: string;
@@ -123,4 +148,7 @@ declare const Select: React$1.ForwardRefExoticComponent<SelectProps & React$1.Re
 declare const mobileIranValidation: RegExp;
 declare const phoneNumberIranValidation: RegExp;
 
-export { ControlledFormControl, FormBuilder, FormControl, FormControlSetting, FormSubmitButton, Select, mobileIranValidation, phoneNumberIranValidation, useAminook };
+declare const inherentNumberString: yup.StringSchema<string | undefined, yup_lib_types.AnyObject, string | undefined>;
+declare const selectWithValueExtractor: () => yup.NumberSchema<number | undefined, yup_lib_types.AnyObject, number | undefined>;
+
+export { ControlledFormControl, FormBuilder, FormControl, FormControlSetting, FormSubmitButton, Select, inherentNumberString, mobileIranValidation, phoneNumberIranValidation, selectWithValueExtractor, useAminook };

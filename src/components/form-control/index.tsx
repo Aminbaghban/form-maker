@@ -1,4 +1,8 @@
 import {
+  ChakraFileUploader,
+  UploaderProps,
+} from '@aminbaghbanzadeh/chakra-file-uploader';
+import {
   Box,
   FormControl as ChakraFormControl,
   FormErrorMessage,
@@ -17,7 +21,11 @@ import { NumberInput } from '../form-fields/number-input';
 import { NumberInputProps } from '../form-fields/number-input/index.types';
 import { PinInput } from '../form-fields/pin-input';
 import { PinInputProps } from '../form-fields/pin-input/index.types';
-import { Select } from '../form-fields/select';
+import {
+  AsyncSelectProps,
+  TagInputProps,
+} from '../form-fields/reach-select/index.types';
+import { AsyncSelect } from '../form-fields/reach-select';
 import { Slider } from '../form-fields/slider';
 import { SliderProps } from '../form-fields/slider/index.types';
 import { Switch } from '../form-fields/switch';
@@ -33,6 +41,8 @@ import {
   TextareaProps,
   TextInputProps,
 } from './index.types';
+import { Select } from '../form-fields/select';
+import { TagInput } from '../form-fields/reach-select/creatable';
 
 export const FormControl = forwardRef<any, FormControlProps>(
   ({ ...ctx }, ref) => {
@@ -40,18 +50,15 @@ export const FormControl = forwardRef<any, FormControlProps>(
      *3rd Hooks
      */
     const [formTranslation] = useTranslation('validations');
-    const { translation: t, router } = useAminook();
-
-    /**
-     * Form Schema
-     */
-    const { formSchema } = useAminook();
+    const { translation: t, router, formSchema } = useAminook();
 
     /**
      * describe schema
      */
-    const fieldSchema = formSchema.fields[ctx.name] as SchemaDescription;
-    const meta = (fieldSchema?.meta as FormControlSetting) ?? ctx.fieldSetting;
+    const fieldSchema = formSchema.fields[ctx.name] as
+      | SchemaDescription
+      | undefined;
+    const meta = (fieldSchema?.meta ?? ctx.fieldSetting) as FormControlSetting;
     const formControlMeta = { name: ctx.name, value: ctx.value };
 
     return (
@@ -68,15 +75,15 @@ export const FormControl = forwardRef<any, FormControlProps>(
             fieldSchema?.tests.some((q) => q.name === 'required') ?? false
           }
         >
-          {!meta?.hideLabel && (
+          {!meta?.hideLabel && meta.type !== 'checkbox' && (
             <FormLabel htmlFor={ctx.name} fontSize='sm' fontWeight='bold'>
               {fieldSchema?.label
-                ? fieldSchema.label
-                : ctx.fieldSetting?.label
-                ? ctx.fieldSetting?.label
+                ? fieldSchema?.label
+                : ctx?.fieldSetting?.label
+                ? ctx?.fieldSetting?.label
                 : t(
                     `${
-                      router ? router.pathname : window.location.pathname
+                      router ? router?.pathname : window.location.pathname
                     }.form.labels.${ctx.name}`
                   )}
             </FormLabel>
@@ -116,8 +123,11 @@ export const FormControl = forwardRef<any, FormControlProps>(
               case 'checkbox':
                 return (
                   <Checkbox
+                    ref={ref}
                     {...(meta?.fieldProps as CheckboxProps)}
                     {...formControlMeta}
+                    checked={formControlMeta.value}
+                    title={fieldSchema?.label}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       ctx.onChange!(e.target.checked, e)
                     }
@@ -184,6 +194,39 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     onChange={(value: string) => ctx.onChange!(value)}
                   />
                 );
+              case 'uploader':
+                return (
+                  <ChakraFileUploader
+                    {...(meta?.fieldProps as UploaderProps)}
+                  />
+                );
+              case 'reach-select':
+                return (
+                  <AsyncSelect
+                    ref={ref}
+                    {...(meta?.fieldProps as AsyncSelectProps)}
+                    isInvalid={!!ctx.error}
+                    {...formControlMeta}
+                    onChange={(e: any) => {
+                      ctx.onChange!(e);
+                    }}
+                  />
+                );
+              case 'input-tag':
+                return (
+                  <TagInput
+                    ref={ref}
+                    {...(meta?.fieldProps as TagInputProps)}
+                    isInvalid={!!ctx.error}
+                    {...formControlMeta}
+                    onChange={(e: any) => {
+                      ctx.onChange!(e);
+                    }}
+                    value={ctx.value
+                      ?.split(',')
+                      ?.map((q: string) => ({ value: q, label: q }))}
+                  />
+                );
               default:
                 return <Box>Unrecognized field type.</Box>;
             }
@@ -202,7 +245,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     ),
                     value: ctx.value,
                   })
-                : ctx.error.message}
+                : ctx.error?.message}
             </FormErrorMessage>
           )}
         </ChakraFormControl>

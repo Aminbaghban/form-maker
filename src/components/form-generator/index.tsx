@@ -4,9 +4,10 @@ import { AxiosResponse } from 'axios';
 import React, { PropsWithChildren } from 'react';
 import { Control, FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { SchemaObjectDescription } from 'yup/lib/schema';
+import { SchemaDescription, SchemaObjectDescription } from 'yup/lib/schema';
 import { useRecaptcha } from '../../hooks/useRecaptcha';
 import { IError } from '../../interfaces/api';
+import { FormControlProps } from '../form-control/index.types';
 import { FormBuilderProps } from './index.types';
 
 const FormBuilderContext = React.createContext<
@@ -48,7 +49,10 @@ function FormBuilder<TFormSchema, TResponse>(
    */
   var formSchema = ctx.formSchema.describe() as SchemaObjectDescription;
   var mutate = useMutation<AxiosResponse<TResponse>, IError, TFormSchema>(
-    ctx.mutationFunction as any
+    ctx.mutationFunction as any,
+    {
+      retry: 0,
+    }
   );
 
   const methods = useForm<TFormSchema>({
@@ -61,6 +65,7 @@ function FormBuilder<TFormSchema, TResponse>(
       var token = await getToken();
       data = { ...data, captchaToken: token };
     }
+
     mutate.mutate(data, {
       onSuccess: (response) => {
         if (ctx.showToastOnSuccess) {
@@ -85,7 +90,7 @@ function FormBuilder<TFormSchema, TResponse>(
       ctx.onError(errors);
       return;
     }
-    console.log(errors);
+    //console.log(errors);
   };
   return (
     <FormBuilderContext.Provider

@@ -17,10 +17,8 @@ export const Editor: React.FC<EditorProps> = ({ ...ctx }) => {
           menubar: false,
           toolbar: 'undo redo | formatselect | bold italic backcolor',
         },
-
+        menubar: false,
         height: 300,
-        menubar: true,
-        plugins: ['code'],
         toolbar:
           'undo redo | formatselect | ' +
           'bold italic backcolor | alignleft aligncenter ' +

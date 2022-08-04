@@ -35,7 +35,7 @@ export const SimpleSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
   );
 });
 
-export const AsyncSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
+const AsyncSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
   var { data, isLoading } = useQuery(
     ctx.fetchUrl!,
     () => axios.get(ctx.fetchUrl!).then((res) => res.data),

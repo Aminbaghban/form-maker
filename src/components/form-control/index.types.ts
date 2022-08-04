@@ -8,6 +8,8 @@ import { SwitchProps } from '../form-fields/switch/index.types';
 import { TextareaProps } from '../form-fields/text-area/index.types';
 import { TextInputProps } from '../form-fields/text-input/index.types';
 import { PinInputProps } from './../form-fields/pin-input/index.types';
+import { UploaderProps } from '@aminbaghbanzadeh/chakra-file-uploader';
+import { AsyncSelectProps } from '../form-fields/reach-select/index.types';
 export { SelectProps } from '../form-fields/select/index.types';
 export { SwitchProps } from '../form-fields/switch/index.types';
 export { TextareaProps } from '../form-fields/text-area/index.types';
@@ -15,6 +17,7 @@ export { TextInputProps } from '../form-fields/text-input/index.types';
 
 type FormControlType =
   | 'input-text'
+  | 'input-tag'
   | 'input-mask'
   | 'input-number'
   | 'checkbox'
@@ -23,7 +26,9 @@ type FormControlType =
   | 'select'
   | 'slider'
   | 'input-pin'
-  | 'editor';
+  | 'editor'
+  | 'uploader'
+  | 'reach-select';
 export interface FormControlSetting extends ChakraFormControlProps {
   type: FormControlType;
   fieldProps?:
@@ -34,10 +39,13 @@ export interface FormControlSetting extends ChakraFormControlProps {
     | TextInputProps
     | SliderProps
     | PinInputProps
-    | NumberInputProps;
+    | NumberInputProps
+    | UploaderProps
+    | AsyncSelectProps;
   placeHolder?: string;
   helperText?: string;
   hideLabel?: boolean;
+  valueConverter?: (arg: any) => any;
 }
 
 export interface FormControlProps {
