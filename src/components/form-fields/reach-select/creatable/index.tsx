@@ -54,12 +54,14 @@ export const TagInput = forwardRef<any, TagInputProps>(({ ...ctx }, ref) => {
   );
   return (
     <CreatableSelect
+      styles={getSelectStyles(ctx)}
       {...ctx}
+      ref={ref}
+      placeholder={ctx.placeholder ?? 'انتخاب کنید.'}
       components={{ DropdownIndicator: null }}
       inputValue={inputValue}
       isMulti
       menuIsOpen={false}
-      styles={getSelectStyles(ctx)}
       onChange={handleChange}
       onInputChange={handleInputChange}
       onKeyDown={handleKeyDown}

@@ -18,6 +18,8 @@ export interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, Group
     resultFieldName?: string;
     totalCountFieldName?: string;
     isInvalid?: boolean;
+    isDisabled?: boolean;
+    isCreatable?: boolean;
 }
 export interface TagInputProps extends Omit<CreatableProps<SelectOption, true, GroupBase<SelectOption>>, 'onChange'> {
     isInvalid?: boolean;

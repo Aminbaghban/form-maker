@@ -15,6 +15,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
   }
 }

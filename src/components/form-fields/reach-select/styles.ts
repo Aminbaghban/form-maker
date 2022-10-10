@@ -2,14 +2,20 @@ import { useCallback } from 'react';
 
 export const getSelectStyles = (ctx: any) => {
   return {
-    control: (provided: any) => ({
+    control: (provided: any, state: any) => ({
       ...provided,
-      padding: '0.3rem',
+      padding: '0.2rem',
       backgroundColor: '#f0f5f7',
-      border: ctx.isInvalid ? '2px solid #E53E3E' : '1px solid #E2E8F0',
+      border: '2px solid !impoetant',
+      borderWidth: '2px !important',
+      borderColor: ctx.isInvalid
+        ? '#e53e3e !important'
+        : state.isFocused
+        ? '#1967d2'
+        : '#E2E8F0 !important',
       borderRadius: '0.375rem',
-      '&focus': {
-        borderColor: '#3182ce !important',
+      '&hover': {
+        borderColor: '#cbd5e0 !important',
       },
     }),
     input: (provided: any) => ({
@@ -44,6 +50,20 @@ export const getSelectStyles = (ctx: any) => {
         color: 'white',
         backgroundColor: '#0385ff !important',
       },
+      '&:focus': {
+        ...provided,
+        fontSize: '0.875rem',
+        padding: '0.2rem',
+        color: 'white',
+        backgroundColor: '#0385ff !important',
+      },
+      '&:active': {
+        ...provided,
+        fontSize: '0.875rem',
+        padding: '0.2rem',
+        color: 'white',
+        backgroundColor: '#0385ff !important',
+      },
     }),
     loadingMessage: (provided: any, state: any) => ({
       ...provided,
@@ -55,8 +75,9 @@ export const getSelectStyles = (ctx: any) => {
     }),
     multiValue: (provided: any, state: any) => ({
       ...provided,
-      background: '#e8f0fa',
+      background: '#d5e1f6',
       fontSize: '0.875rem',
+      padding: '0.2rem 0.4rem',
     }),
   };
 };

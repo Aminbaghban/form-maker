@@ -26,6 +26,8 @@ export interface AsyncSelectProps
   resultFieldName?: string;
   totalCountFieldName?: string;
   isInvalid?: boolean;
+  isDisabled?: boolean;
+  isCreatable?: boolean;
 }
 
 export interface TagInputProps

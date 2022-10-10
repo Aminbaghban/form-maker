@@ -10,7 +10,7 @@ import {
   FormLabel,
 } from '@chakra-ui/react';
 import React, { forwardRef } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { SchemaDescription } from 'yup/lib/schema';
 import { fixPersianAndArabicNumber } from '../../helpers';
@@ -43,6 +43,15 @@ import {
 } from './index.types';
 import { Select } from '../form-fields/select';
 import { TagInput } from '../form-fields/reach-select/creatable';
+import { TreeView } from '../form-fields/tree';
+import { TreeViewProps } from '../form-fields/tree/index.types';
+import { TextInputSkeleton } from '../form-fields/text-input/skeleton';
+import { CheckboxSkeleton } from '../form-fields/checkbox/skeleton';
+import { SelectSkeleton } from '../form-fields/select/skeleton';
+import { TextAreaSkeleton } from '../form-fields/text-area/skeleton';
+import { StartRating } from '../form-fields/star-selector';
+import { StartRatingProps } from '../form-fields/star-selector/index.types';
+import { EditorProps } from '../form-fields/editor/index.types';
 
 export const FormControl = forwardRef<any, FormControlProps>(
   ({ ...ctx }, ref) => {
@@ -50,7 +59,13 @@ export const FormControl = forwardRef<any, FormControlProps>(
      *3rd Hooks
      */
     const [formTranslation] = useTranslation('validations');
-    const { translation: t, router, formSchema } = useAminook();
+    const {
+      translation: t,
+      router,
+      formSchema,
+      isDefaultValueFetching,
+    } = useAminook();
+    const { setValue } = useFormContext();
 
     /**
      * describe schema
@@ -76,7 +91,12 @@ export const FormControl = forwardRef<any, FormControlProps>(
           }
         >
           {!meta?.hideLabel && meta.type !== 'checkbox' && (
-            <FormLabel htmlFor={ctx.name} fontSize='sm' fontWeight='bold'>
+            <FormLabel
+              htmlFor={ctx.name}
+              fontSize='sm'
+              fontWeight='bold'
+              color={isDefaultValueFetching ? 'gray.300' : '#202124'}
+            >
               {fieldSchema?.label
                 ? fieldSchema?.label
                 : ctx?.fieldSetting?.label
@@ -92,7 +112,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
             switch (meta?.type ?? ctx.fieldSetting?.type) {
               case 'input-text':
               case 'input-mask':
-                return (
+                return !isDefaultValueFetching ? (
                   <TextInput
                     ref={ref}
                     {...{
@@ -103,9 +123,15 @@ export const FormControl = forwardRef<any, FormControlProps>(
                       ctx.onChange!(fixPersianAndArabicNumber(e.target.value));
                     }}
                   />
+                ) : (
+                  <TextInputSkeleton
+                    width={(
+                      meta?.fieldProps as TextInputProps
+                    ).width?.toString()}
+                  />
                 );
               case 'input-number':
-                return (
+                return !isDefaultValueFetching ? (
                   <NumberInput
                     ref={ref}
                     {...{
@@ -119,9 +145,15 @@ export const FormControl = forwardRef<any, FormControlProps>(
                       ctx.onChange!(valueAsNumber);
                     }}
                   />
+                ) : (
+                  <TextInputSkeleton
+                    width={(
+                      meta?.fieldProps as TextInputProps
+                    ).width?.toString()}
+                  />
                 );
               case 'checkbox':
-                return (
+                return !isDefaultValueFetching ? (
                   <Checkbox
                     ref={ref}
                     {...(meta?.fieldProps as CheckboxProps)}
@@ -132,9 +164,11 @@ export const FormControl = forwardRef<any, FormControlProps>(
                       ctx.onChange!(e.target.checked, e)
                     }
                   />
+                ) : (
+                  <CheckboxSkeleton />
                 );
               case 'select':
-                return (
+                return !isDefaultValueFetching ? (
                   <Select
                     ref={ref}
                     {...(meta?.fieldProps as SelectProps)}
@@ -143,6 +177,8 @@ export const FormControl = forwardRef<any, FormControlProps>(
                       ctx.onChange!(e.target.value, e)
                     }
                   />
+                ) : (
+                  <SelectSkeleton />
                 );
               case 'switch':
                 return (
@@ -155,27 +191,25 @@ export const FormControl = forwardRef<any, FormControlProps>(
                   />
                 );
               case 'text-area':
-                return (
+                return !isDefaultValueFetching ? (
                   <Textarea
                     {...formControlMeta}
                     {...(meta?.fieldProps as TextareaProps)}
                     onChange={(e) => ctx.onChange!(e.target.value, e)}
                   />
-                );
-              case 'text-area':
-                return (
-                  <Textarea
-                    {...formControlMeta}
-                    {...(meta?.fieldProps as TextareaProps)}
-                    onChange={(e) => ctx.onChange!(e.target.value, e)}
-                  />
+                ) : (
+                  <TextAreaSkeleton />
                 );
               case 'slider':
                 return (
                   <Slider
                     {...ctx}
                     {...(meta?.fieldProps as SliderProps)}
-                    //onChange={(e) => ctx.onChange!(e.target.value, e)}
+                    onChange={(e: number[]) => {
+                      ctx.name
+                        .split('_')
+                        .forEach((q, index) => setValue(`${q}`, e[index]));
+                    }}
                   />
                 );
               case 'input-pin':
@@ -190,6 +224,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
               case 'editor':
                 return (
                   <Editor
+                    {...(meta?.fieldProps as EditorProps)}
                     value={ctx.value}
                     onChange={(value: string) => ctx.onChange!(value)}
                   />
@@ -201,19 +236,22 @@ export const FormControl = forwardRef<any, FormControlProps>(
                   />
                 );
               case 'reach-select':
-                return (
+                return !isDefaultValueFetching ? (
                   <AsyncSelect
                     ref={ref}
                     {...(meta?.fieldProps as AsyncSelectProps)}
                     isInvalid={!!ctx.error}
+                    isDisabled={meta?.isDisabled}
                     {...formControlMeta}
                     onChange={(e: any) => {
                       ctx.onChange!(e);
                     }}
                   />
+                ) : (
+                  <SelectSkeleton />
                 );
               case 'input-tag':
-                return (
+                return !isDefaultValueFetching ? (
                   <TagInput
                     ref={ref}
                     {...(meta?.fieldProps as TagInputProps)}
@@ -222,9 +260,37 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     onChange={(e: any) => {
                       ctx.onChange!(e);
                     }}
-                    value={ctx.value
-                      ?.split(',')
-                      ?.map((q: string) => ({ value: q, label: q }))}
+                    value={
+                      !!ctx.value
+                        ? ctx.value
+                            ?.split(',')
+                            ?.map((q: string) => ({ value: q, label: q }))
+                        : undefined
+                    }
+                  />
+                ) : (
+                  <TextInputSkeleton />
+                );
+              case 'tree-view':
+                return (
+                  <TreeView
+                    {...(meta?.fieldProps as TreeViewProps)}
+                    {...formControlMeta}
+                    onChange={(e: any) => {
+                      ctx.onChange!(e);
+                    }}
+                    defaultSelected={ctx.value}
+                  />
+                );
+              case 'star-picker':
+                return (
+                  <StartRating
+                    {...(meta?.fieldProps as StartRatingProps)}
+                    {...formControlMeta}
+                    onClick={(e: any) => {
+                      ctx.onChange!(e);
+                    }}
+                    initialValue={ctx.value}
                   />
                 );
               default:

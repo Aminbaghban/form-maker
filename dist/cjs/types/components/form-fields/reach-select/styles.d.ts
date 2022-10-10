@@ -1,5 +1,5 @@
 export declare const getSelectStyles: (ctx: any) => {
-    control: (provided: any) => any;
+    control: (provided: any, state: any) => any;
     input: (provided: any) => any;
     valueContainer: (provided: any) => any;
     indicatorSeparator: (provided: any) => any;

@@ -1,13 +1,12 @@
 import { useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AxiosResponse } from 'axios';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import { Control, FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
-import { SchemaDescription, SchemaObjectDescription } from 'yup/lib/schema';
+import { useMutation } from '@tanstack/react-query';
+import { SchemaObjectDescription } from 'yup/lib/schema';
 import { useRecaptcha } from '../../hooks/useRecaptcha';
 import { IError } from '../../interfaces/api';
-import { FormControlProps } from '../form-control/index.types';
 import { FormBuilderProps } from './index.types';
 
 const FormBuilderContext = React.createContext<
@@ -18,6 +17,7 @@ const FormBuilderContext = React.createContext<
       router: any;
       isLoading: boolean;
       isError: boolean;
+      isDefaultValueFetching?: boolean;
     }
   | undefined
 >(undefined);
@@ -56,26 +56,33 @@ function FormBuilder<TFormSchema, TResponse>(
   );
 
   const methods = useForm<TFormSchema>({
+    mode: 'onSubmit',
     resolver: yupResolver(ctx.formSchema),
     defaultValues: !!ctx.defaultValues ? (ctx.defaultValues as any) : undefined,
   });
 
   const onSubmit = async (data: any) => {
+    if (!!ctx.onSubmitSucess) {
+      ctx.onSubmitSucess(data as TFormSchema);
+      return;
+    }
     if (ctx.doesHaveRecaptcha) {
       var token = await getToken();
       data = { ...data, captchaToken: token };
     }
-
     mutate.mutate(data, {
       onSuccess: (response) => {
         if (ctx.showToastOnSuccess) {
           toast({ title: ctx.successToastMessage, status: 'success' });
         }
-        if (ctx.onSubmitSucess) {
-          ctx.onSubmitSucess(response.data, data);
+        if (!!ctx.onMutateSucess) {
+          ctx.onMutateSucess(response.data, data);
         }
       },
       onError: (error) => {
+        if (!!ctx.onMutateError) {
+          ctx.onMutateError(error);
+        }
         toast({
           title: error.code,
           description: error.message,
@@ -83,15 +90,17 @@ function FormBuilder<TFormSchema, TResponse>(
         });
       },
     });
-    console.log(data);
   };
   const onError = (errors: any) => {
-    if (ctx.onError) {
-      ctx.onError(errors);
+    if (ctx.onSubmitError) {
+      ctx.onSubmitError(errors);
       return;
     }
-    //console.log(errors);
   };
+
+  useEffect(() => {
+    methods.reset(ctx.defaultValues as any);
+  }, [ctx.defaultValues, methods.reset]);
   return (
     <FormBuilderContext.Provider
       value={{
@@ -101,6 +110,7 @@ function FormBuilder<TFormSchema, TResponse>(
         router: ctx.router,
         isLoading: mutate.isLoading,
         isError: mutate.isError,
+        isDefaultValueFetching: ctx.isDefaultValueFetching,
       }}
     >
       <FormProvider {...methods}>

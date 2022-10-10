@@ -5,8 +5,9 @@ import { EditorProps } from './index.types';
 export const Editor: React.FC<EditorProps> = ({ ...ctx }) => {
   return (
     <Tiny
+      {...ctx.editorProps}
       value={ctx.value}
-      tinymceScriptSrc='/tinymce.min.js'
+      tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce.min.js'}
       onEditorChange={(value) => ctx.onChange(value)}
       //onInit={(evt, editor) => (editorRef.current = editor)}
       //initialValue='<p>This is the initial content of the editor.</p>'
@@ -24,8 +25,7 @@ export const Editor: React.FC<EditorProps> = ({ ...ctx }) => {
           'bold italic backcolor | alignleft aligncenter ' +
           'alignright alignjustify | bullist numlist outdent indent | ' +
           'removeformat',
-        // content_style:
-        //   'body { font-size:1rem; color: #161616; font-size: Vazir }',
+        ...ctx.editorProps?.init,
       }}
     />
   );

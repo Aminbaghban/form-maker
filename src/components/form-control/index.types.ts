@@ -10,6 +10,9 @@ import { TextInputProps } from '../form-fields/text-input/index.types';
 import { PinInputProps } from './../form-fields/pin-input/index.types';
 import { UploaderProps } from '@aminbaghbanzadeh/chakra-file-uploader';
 import { AsyncSelectProps } from '../form-fields/reach-select/index.types';
+import { TreeViewProps } from '../form-fields/tree/index.types';
+import { StartRatingProps } from '../form-fields/star-selector/index.types';
+import { EditorProps } from '../form-fields/editor/index.types';
 export { SelectProps } from '../form-fields/select/index.types';
 export { SwitchProps } from '../form-fields/switch/index.types';
 export { TextareaProps } from '../form-fields/text-area/index.types';
@@ -28,7 +31,9 @@ type FormControlType =
   | 'input-pin'
   | 'editor'
   | 'uploader'
-  | 'reach-select';
+  | 'reach-select'
+  | 'tree-view'
+  | 'star-picker';
 export interface FormControlSetting extends ChakraFormControlProps {
   type: FormControlType;
   fieldProps?:
@@ -41,7 +46,10 @@ export interface FormControlSetting extends ChakraFormControlProps {
     | PinInputProps
     | NumberInputProps
     | UploaderProps
-    | AsyncSelectProps;
+    | AsyncSelectProps
+    | TreeViewProps
+    | StartRatingProps
+    | EditorProps;
   placeHolder?: string;
   helperText?: string;
   hideLabel?: boolean;

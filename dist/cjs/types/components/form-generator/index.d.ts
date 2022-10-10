@@ -10,5 +10,6 @@ declare function useAminook(): {
     router: any;
     isLoading: boolean;
     isError: boolean;
+    isDefaultValueFetching?: boolean | undefined;
 };
 export { FormBuilder, useAminook };

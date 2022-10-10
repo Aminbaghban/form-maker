@@ -23,10 +23,16 @@ export interface FormBuilderProps<TFormSchema, TResponse> {
      * you must
      */
     router?: any;
-    onSubmitSucess?: (data: TResponse, varibales: TFormSchema) => void;
-    onError?: (errors: FieldErrors<TFormSchema>) => void;
+    onSubmitSucess?: (varibales: TFormSchema) => void;
+    onSubmitError?: (errors: FieldErrors<TFormSchema>) => void;
+    onMutateSucess?: (data: TResponse, varibales: TFormSchema) => void;
+    onMutateError?: (error: any) => void;
     mutationFunction?: (varibales: TFormSchema) => Promise<AxiosResponse<TResponse>>;
     defaultValues?: Partial<TFormSchema>;
     doesHaveRecaptcha?: boolean;
     recaptchaApiKey?: string;
+    /**
+     * you can pass this meanwhile you are fetching defaulkt values. During this it shows skeleton for form fields.
+     */
+    isDefaultValueFetching?: boolean;
 }

@@ -5,6 +5,7 @@ import { TextInputProps } from './index.types';
 export const TextInput = forwardRef<any, TextInputProps>(({ ...ctx }, ref) => {
   return (
     <Input
+      _focus={{ bg: 'white', border: '1px solid #1967D2' }}
       {...ctx}
       onChange={ctx.onChange}
       ref={ref}
@@ -12,7 +13,6 @@ export const TextInput = forwardRef<any, TextInputProps>(({ ...ctx }, ref) => {
       bg='#f0f5f7'
       p='6'
       color='#696969'
-      _focus={{ bg: 'white', border: '1px solid #1967D2' }}
     />
   );
 });

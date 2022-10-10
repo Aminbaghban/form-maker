@@ -1,7 +1,7 @@
 import { Select as ChakraSelect } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { forwardRef } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { SelectProps } from './index.types';
 import { SelectSkeleton } from './skeleton';
 
@@ -18,6 +18,7 @@ export const Select = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
 export const SimpleSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
   return (
     <ChakraSelect
+      {...ctx}
       ref={ref}
       onChange={ctx.onChange!}
       bg='#F0F5F7'
@@ -37,7 +38,7 @@ export const SimpleSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
 
 const AsyncSelect = forwardRef<any, SelectProps>(({ ...ctx }, ref) => {
   var { data, isLoading } = useQuery(
-    ctx.fetchUrl!,
+    [ctx.fetchUrl!],
     () => axios.get(ctx.fetchUrl!).then((res) => res.data),
     {
       select: (res: any) =>

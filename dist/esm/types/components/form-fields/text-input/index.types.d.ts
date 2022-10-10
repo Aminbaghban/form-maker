@@ -1,5 +1,5 @@
 import { InputProps } from '@chakra-ui/react';
-import { IconType } from 'react-icons';
+import { IconType } from '../../../interfaces';
 export interface TextInputProps extends InputProps {
     icon?: IconType;
 }
