@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 import { FieldErrors } from 'react-hook-form';
 import { ObjectSchema } from 'yup';
 export interface FormBuilderProps<TFormSchema, TResponse> {
+    mode?: 'onSubmit' | 'onChange';
     showToastOnSuccess?: boolean;
     title?: string;
     successToastMessage?: string;

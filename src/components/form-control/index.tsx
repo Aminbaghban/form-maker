@@ -1,5 +1,6 @@
 import {
   ChakraFileUploader,
+  ChakraFileUploaderSkeleton,
   UploaderProps,
 } from '@aminbaghbanzadeh/chakra-file-uploader';
 import {
@@ -40,10 +41,12 @@ import {
   SwitchProps,
   TextareaProps,
   TextInputProps,
+  RadioGroupProps,
 } from './index.types';
 import { Select } from '../form-fields/select';
 import { TagInput } from '../form-fields/reach-select/creatable';
 import { TreeView } from '../form-fields/tree';
+import { RadioGroup } from '../form-fields/radio';
 import { TreeViewProps } from '../form-fields/tree/index.types';
 import { TextInputSkeleton } from '../form-fields/text-input/skeleton';
 import { CheckboxSkeleton } from '../form-fields/checkbox/skeleton';
@@ -230,8 +233,12 @@ export const FormControl = forwardRef<any, FormControlProps>(
                   />
                 );
               case 'uploader':
-                return (
+                return !isDefaultValueFetching ? (
                   <ChakraFileUploader
+                    {...(meta?.fieldProps as UploaderProps)}
+                  />
+                ) : (
+                  <ChakraFileUploaderSkeleton
                     {...(meta?.fieldProps as UploaderProps)}
                   />
                 );
@@ -282,6 +289,16 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     defaultSelected={ctx.value}
                   />
                 );
+              case 'radio-group':
+                return (
+                  <RadioGroup
+                    {...(meta?.fieldProps as RadioGroupProps)}
+                    {...formControlMeta}
+                    onChange={(e: any) => {
+                      ctx.onChange!(e);
+                    }}
+                  />
+                );
               case 'star-picker':
                 return (
                   <StartRating
@@ -293,6 +310,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     initialValue={ctx.value}
                   />
                 );
+
               default:
                 return <Box>Unrecognized field type.</Box>;
             }

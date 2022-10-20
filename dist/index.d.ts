@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import React$1, { PropsWithChildren, MouseEventHandler, FC } from 'react';
-import { NumberInputProps as NumberInputProps$1, CheckboxProps as CheckboxProps$1, SelectProps as SelectProps$1, RangeSliderProps, SwitchProps as SwitchProps$1, TextareaProps as TextareaProps$1, InputProps, UsePinInputProps, ButtonProps as ButtonProps$1, FormControlProps as FormControlProps$1 } from '@chakra-ui/react';
-import { FieldError, FieldErrors, Control } from 'react-hook-form';
+import { NumberInputProps as NumberInputProps$1, CheckboxProps as CheckboxProps$1, SelectProps as SelectProps$1, RangeSliderProps, SwitchProps as SwitchProps$1, TextareaProps as TextareaProps$1, InputProps, UsePinInputProps, ButtonProps as ButtonProps$1, RadioGroupProps as RadioGroupProps$1, RadioProps, FormControlProps as FormControlProps$1 } from '@chakra-ui/react';
+import { FieldError, FieldErrors, FieldValues, Control } from 'react-hook-form';
 import { UploaderProps } from '@aminbaghbanzadeh/chakra-file-uploader';
 import { AsyncPaginateProps } from 'react-select-async-paginate';
 import { TreeProps, TreeData } from '@aminbaghbanzadeh/chakra-tree-view';
@@ -76,6 +76,7 @@ interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, GroupBase<Se
     isInvalid?: boolean;
     isDisabled?: boolean;
     isCreatable?: boolean;
+    backgroundColor?: string;
 }
 
 interface TreeViewProps extends TreeProps {
@@ -125,10 +126,17 @@ interface EditorProps {
     editorProps?: Partial<IProps>;
 }
 
-declare type FormControlType = 'input-text' | 'input-tag' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor' | 'uploader' | 'reach-select' | 'tree-view' | 'star-picker';
+interface RadioGroupProps extends RadioGroupProps$1 {
+    radioProps?: RadioProps;
+    options?: SelectOption[];
+    fetchUrl?: string;
+    resultFieldName?: string;
+}
+
+declare type FormControlType = 'input-text' | 'input-tag' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor' | 'uploader' | 'reach-select' | 'tree-view' | 'star-picker' | 'radio-group';
 interface FormControlSetting extends FormControlProps$1 {
     type: FormControlType;
-    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps | UploaderProps | AsyncSelectProps | TreeViewProps | StartRatingProps | EditorProps;
+    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps | UploaderProps | AsyncSelectProps | TreeViewProps | StartRatingProps | EditorProps | RadioGroupProps;
     placeHolder?: string;
     helperText?: string;
     hideLabel?: boolean;
@@ -156,6 +164,7 @@ declare const FormControl: React$1.ForwardRefExoticComponent<FormControlProps & 
 declare const ControlledFormControl: React$1.FC<ControlledFormControlProps>;
 
 interface FormBuilderProps<TFormSchema, TResponse> {
+    mode?: 'onSubmit' | 'onChange';
     showToastOnSuccess?: boolean;
     title?: string;
     successToastMessage?: string;
@@ -190,7 +199,7 @@ interface FormBuilderProps<TFormSchema, TResponse> {
     isDefaultValueFetching?: boolean;
 }
 
-declare function FormBuilder<TFormSchema, TResponse>(ctx: PropsWithChildren<FormBuilderProps<TFormSchema, TResponse>>): JSX.Element;
+declare function FormBuilder<TFormSchema extends FieldValues, TResponse>(ctx: PropsWithChildren<FormBuilderProps<TFormSchema, TResponse>>): JSX.Element;
 declare function useAminook(): {
     formSchema: SchemaObjectDescription;
     control: Control<any, any>;

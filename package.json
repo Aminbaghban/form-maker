@@ -1,6 +1,6 @@
 {
   "name": "@aminbaghbanzadeh/form-maker",
-  "version": "1.2.100",
+  "version": "1.2.139",
   "description": "This is simple form generator based on Chakra UI and yup by simply passing yup schema if you want more information please be in touch with me by my email address aminslkbgh@gmail.com",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -33,16 +33,12 @@
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.3.5"
   },
-  "dependencies": {
-    "@tanstack/react-query": "^4.10.3"
-  },
   "peerDependencies": {
-    "@aminbaghbanzadeh/chakra-file-uploader": "^1.0.30",
+    "@aminbaghbanzadeh/chakra-file-uploader": "^1.0.39",
     "@aminbaghbanzadeh/chakra-tree-view": "^1.0.10",
     "@chakra-ui/icons": "~2.0.10",
     "@chakra-ui/react": "^2.2.3",
     "@hookform/resolvers": "^2.8.8",
-    "@tanstack/react-query-devtools": "^4.11.0",
     "@tinymce/tinymce-react": "^4.2.0",
     "axios": "^0.27.2",
     "i18next": "^21.8.5",
@@ -53,7 +49,6 @@
     "react-input-mask": "^2.0.4",
     "react-select": "^5.4.0",
     "react-select-async-paginate": "^0.6.2",
-    "tinymce": "^6.2.0",
     "yup": "^0.32.11"
   }
 }

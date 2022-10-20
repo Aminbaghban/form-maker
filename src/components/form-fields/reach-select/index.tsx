@@ -18,10 +18,13 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
       );
 
       return {
-        options: response.data[ctx.resultFieldName ?? 'items'],
-        hasMore:
-          response.data[ctx.totalCountFieldName ?? 'totalCount'] >
-          loadedOptions.length,
+        options: Array.isArray(response.data)
+          ? response.data
+          : response.data[ctx.resultFieldName ?? 'items'],
+        hasMore: Array.isArray(response.data)
+          ? response.data.length > loadedOptions.length
+          : response.data[ctx.totalCountFieldName ?? 'totalCount'] >
+            loadedOptions.length,
       };
     };
 
@@ -30,13 +33,11 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
         <CreatableAsyncPaginate
           styles={getSelectStyles(ctx)}
           isRtl
-          {...ctx}
+          placeholder='انتخاب کنید.'
           isClearable
           isSearchable
           selectRef={ref}
           defaultValue={ctx.value}
-          loadOptions={loadOptions}
-          placeholder='انتخاب کنید.'
           noOptionsMessage={(obj) =>
             `گزینه ای مرتبط با ${obj.inputValue} یافت نشد.`
           }
@@ -45,7 +46,7 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
           components={{
             LoadingIndicator: () => <Spinner size='sm' colorScheme='blue' />,
           }}
-          debounceTimeout={1}
+          debounceTimeout={2000}
           //@ts-ignore
           formatCreateLabel={(data) => (
             <HStack>
@@ -53,6 +54,8 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
               <Text>"{data}"</Text>
             </HStack>
           )}
+          {...ctx}
+          loadOptions={loadOptions}
         />
       );
     }
@@ -60,22 +63,22 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
     return (
       <AsyncPaginate
         styles={getSelectStyles(ctx)}
-        {...ctx}
+        placeholder='انتخاب کنید.'
+        noOptionsMessage={(obj) =>
+          `گزینه ای مرتبط با ${obj.inputValue} یافت نشد.`
+        }
         isClearable
         isSearchable
         selectRef={ref}
         defaultValue={ctx.value}
-        loadOptions={loadOptions}
-        placeholder='انتخاب کنید.'
-        debounceTimeout={1}
-        noOptionsMessage={(obj) =>
-          `گزینه ای مرتبط با ${obj.inputValue} یافت نشد.`
-        }
+        debounceTimeout={2000}
         loadingMessage={() => 'در حال بارگزاری...'}
         onChange={(e, f) => ctx.onChange!(e, f)}
         components={{
           LoadingIndicator: () => <Spinner size='sm' colorScheme='blue' />,
         }}
+        {...ctx}
+        loadOptions={loadOptions}
       />
     );
   }

@@ -28,6 +28,7 @@ export interface AsyncSelectProps
   isInvalid?: boolean;
   isDisabled?: boolean;
   isCreatable?: boolean;
+  backgroundColor?: string;
 }
 
 export interface TagInputProps

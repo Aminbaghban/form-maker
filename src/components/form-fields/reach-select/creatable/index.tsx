@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 import { ActionMeta, MultiValue, OnChangeValue } from 'react-select';
@@ -14,6 +15,12 @@ export const TagInput = forwardRef<any, TagInputProps>(({ ...ctx }, ref) => {
   const [values, setValues] = useState<OnChangeValue<SelectOption, true>>(
     (ctx.value as MultiValue<SelectOption>) ?? []
   );
+
+  useEffect(() => {
+    if (!!ctx.value) {
+      setValues(ctx.value as MultiValue<SelectOption>);
+    }
+  }, [ctx.value]);
 
   const handleInputChange = useCallback((e: string) => {
     setInputValue(e);

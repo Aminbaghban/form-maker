@@ -5,7 +5,7 @@ export const getSelectStyles = (ctx: any) => {
     control: (provided: any, state: any) => ({
       ...provided,
       padding: '0.2rem',
-      backgroundColor: '#f0f5f7',
+      backgroundColor: ctx.backgroundColor ?? '#f0f5f7',
       border: '2px solid !impoetant',
       borderWidth: '2px !important',
       borderColor: ctx.isInvalid

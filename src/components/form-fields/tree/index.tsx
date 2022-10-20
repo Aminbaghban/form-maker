@@ -1,23 +1,18 @@
 import { Tree } from '@aminbaghbanzadeh/chakra-tree-view';
 import { Button, Collapse, useDisclosure } from '@chakra-ui/react';
 import axios from 'axios';
-import React from 'react';
-import { useQuery } from 'react-query';
+import React, { useEffect, useState } from 'react';
 import { TreeViewProps } from './index.types';
 
 export const TreeView: React.FC<TreeViewProps> = ({ ...ctx }) => {
-  console.log(ctx);
+  const [data, setData] = useState();
   const { isOpen, onToggle } = useDisclosure();
-  var { data, isLoading } = useQuery(
-    ctx.fetchUrl!,
-    () =>
-      axios
-        .get(ctx.fetchUrl!, { headers: { ...ctx.requestHeaders } })
-        .then((res) => res),
-    {
-      enabled: !!ctx.fetchUrl,
-    }
-  );
+  useEffect(() => {
+    axios
+      .get(ctx.fetchUrl!, { headers: { ...ctx.requestHeaders } })
+      .then((res) => setData(res.data));
+  }, []);
+
   return (
     <>
       {!ctx.inline && (

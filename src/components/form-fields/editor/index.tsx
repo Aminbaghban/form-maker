@@ -7,7 +7,7 @@ export const Editor: React.FC<EditorProps> = ({ ...ctx }) => {
     <Tiny
       {...ctx.editorProps}
       value={ctx.value}
-      tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce.min.js'}
+      tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
       onEditorChange={(value) => ctx.onChange(value)}
       //onInit={(evt, editor) => (editorRef.current = editor)}
       //initialValue='<p>This is the initial content of the editor.</p>'
@@ -20,11 +20,11 @@ export const Editor: React.FC<EditorProps> = ({ ...ctx }) => {
         },
         menubar: false,
         height: 300,
+        plugins: ['lists', 'directionality'],
         toolbar:
-          'undo redo | formatselect | ' +
-          'bold italic backcolor | alignleft aligncenter ' +
-          'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat',
+          'undo redo | ltr rtl | blocks |  formatselect | ' +
+          'bold italic  | alignleft aligncenter ' +
+          'alignright alignjustify | bullist numlist | outdent indent | ',
         ...ctx.editorProps?.init,
       }}
     />
