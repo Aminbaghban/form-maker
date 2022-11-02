@@ -27,19 +27,16 @@ export const FormSubmitButton: FC<ButtonProps> = ({
   const { formState } = useFormContext();
   const { isOpen, onToggle } = useDisclosure();
 
-  useEffect(() => {
-    console.log(formState.errors);
-  }, [formState]);
   return (
     <HStack spacing='6' mt={!!ctx.mt ? ctx.mt : '6'}>
       <ChakraButton
-        isLoading={isLoading}
+        isLoading={isLoading || ctx.isLoading}
+        disabled={isDefaultValueFetching || isLoading || ctx.isLoading}
         loadingText='در حال ذخیره اطلاعات...'
         type='submit'
         variant='primary_dark'
         fontSize='sm'
         {...ctx}
-        disabled={isDefaultValueFetching || isLoading}
       >
         {text}
       </ChakraButton>

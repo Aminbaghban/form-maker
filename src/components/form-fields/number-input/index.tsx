@@ -18,7 +18,13 @@ export const NumberInput = forwardRef<any, NumberInputProps>(
         inputMode='numeric'
         min={0}
         max={Infinity}
-        value={ctx.value || ctx.value === 0 ? ctx.value : ''}
+        value={
+          ctx.value || ctx.value === 0
+            ? ctx.value == NaN
+              ? ''
+              : ctx.value
+            : ''
+        }
       >
         <NumberInputField bg='#F0F5F7' p='6' />
         <NumberInputStepper>

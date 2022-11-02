@@ -15,25 +15,18 @@ export interface FormBuilderProps<TFormSchema, TResponse> {
      * pass ControlledFormControl or UncontrolledFormControl as children
      */
     children: React.ReactNode;
-    /**
-     * you must pass translation object such as t in useTranslation in order to use your localization system for
-     * form control labels or place holders or validations messages. Notice that you can still label and it has it hiher priority than translation system.
-     */
-    translation?: any;
-    /**
-     * you must
-     */
-    router?: any;
     onSubmitSucess?: (varibales: TFormSchema) => void;
     onSubmitError?: (errors: FieldErrors<TFormSchema>) => void;
-    onMutateSucess?: (data: TResponse, varibales: TFormSchema) => void;
-    onMutateError?: (error: any) => void;
-    mutationFunction?: (varibales: TFormSchema) => Promise<AxiosResponse<TResponse>>;
+    mutationFunction?: (varibales: TFormSchema) => Promise<AxiosResponse<TResponse>> | void;
     defaultValues?: Partial<TFormSchema>;
-    doesHaveRecaptcha?: boolean;
-    recaptchaApiKey?: string;
+    /**
+     *something like captcha token
+     */
+    extraPropsForMutation?: object;
     /**
      * you can pass this meanwhile you are fetching defaulkt values. During this it shows skeleton for form fields.
      */
     isDefaultValueFetching?: boolean;
+    doesHaveRecaptcha?: boolean;
+    getRecaptcha?: () => Promise<string>;
 }

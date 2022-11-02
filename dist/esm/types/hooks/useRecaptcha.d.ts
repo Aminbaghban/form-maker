@@ -1,1 +1,3 @@
-export declare const useRecaptcha: (key: string, apiKey: string, callback: () => void, active: boolean) => readonly [() => Promise<string>];
+export declare const useRecaptcha: (key: string, apiKey: string, callback: () => void, disable?: boolean) => {
+    readonly getToken: () => Promise<string>;
+};

@@ -12,62 +12,58 @@ import {
 } from '@chakra-ui/react';
 import React, { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { SchemaDescription } from 'yup/lib/schema';
 import { fixPersianAndArabicNumber } from '../../helpers';
 import { Checkbox } from '../form-fields/checkbox';
 import { CheckboxProps } from '../form-fields/checkbox/index.types';
+import { CheckboxSkeleton } from '../form-fields/checkbox/skeleton';
 import { Editor } from '../form-fields/editor';
+import { EditorProps } from '../form-fields/editor/index.types';
 import { NumberInput } from '../form-fields/number-input';
 import { NumberInputProps } from '../form-fields/number-input/index.types';
+import { PasswordInput } from '../form-fields/password-input';
+import { PasswordInputProps } from '../form-fields/password-input/index.types';
 import { PinInput } from '../form-fields/pin-input';
 import { PinInputProps } from '../form-fields/pin-input/index.types';
+import { RadioGroup } from '../form-fields/radio';
+import { AsyncSelect } from '../form-fields/reach-select';
+import { TagInput } from '../form-fields/reach-select/creatable';
 import {
   AsyncSelectProps,
   TagInputProps,
 } from '../form-fields/reach-select/index.types';
-import { AsyncSelect } from '../form-fields/reach-select';
+import { Select } from '../form-fields/select';
+import { SelectSkeleton } from '../form-fields/select/skeleton';
 import { Slider } from '../form-fields/slider';
 import { SliderProps } from '../form-fields/slider/index.types';
+import { StartRating } from '../form-fields/star-selector';
+import { StartRatingProps } from '../form-fields/star-selector/index.types';
 import { Switch } from '../form-fields/switch';
 import { Textarea } from '../form-fields/text-area';
+import { TextAreaSkeleton } from '../form-fields/text-area/skeleton';
 import { TextInput } from '../form-fields/text-input';
+import { TextInputSkeleton } from '../form-fields/text-input/skeleton';
+import { TreeView } from '../form-fields/tree';
+import { TreeViewProps } from '../form-fields/tree/index.types';
 import { useAminook } from '../form-generator/index';
 import {
   ControlledFormControlProps,
   FormControlProps,
   FormControlSetting,
+  RadioGroupProps,
   SelectProps,
   SwitchProps,
   TextareaProps,
   TextInputProps,
-  RadioGroupProps,
 } from './index.types';
-import { Select } from '../form-fields/select';
-import { TagInput } from '../form-fields/reach-select/creatable';
-import { TreeView } from '../form-fields/tree';
-import { RadioGroup } from '../form-fields/radio';
-import { TreeViewProps } from '../form-fields/tree/index.types';
-import { TextInputSkeleton } from '../form-fields/text-input/skeleton';
-import { CheckboxSkeleton } from '../form-fields/checkbox/skeleton';
-import { SelectSkeleton } from '../form-fields/select/skeleton';
-import { TextAreaSkeleton } from '../form-fields/text-area/skeleton';
-import { StartRating } from '../form-fields/star-selector';
-import { StartRatingProps } from '../form-fields/star-selector/index.types';
-import { EditorProps } from '../form-fields/editor/index.types';
 
 export const FormControl = forwardRef<any, FormControlProps>(
   ({ ...ctx }, ref) => {
     /**
      *3rd Hooks
      */
-    const [formTranslation] = useTranslation('validations');
-    const {
-      translation: t,
-      router,
-      formSchema,
-      isDefaultValueFetching,
-    } = useAminook();
+
+    const { formSchema, isDefaultValueFetching } = useAminook();
     const { setValue } = useFormContext();
 
     /**
@@ -84,7 +80,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
         my={ctx.my}
         mx={ctx.mx}
         display='inline-block'
-        w={{ base: ctx.width?.base ?? 'full', md: ctx.width?.md ?? 'full' }}
+        w={ctx.width ?? 'full'}
       >
         <ChakraFormControl
           display={ctx.hidden ? 'none' : 'initial'}
@@ -93,26 +89,18 @@ export const FormControl = forwardRef<any, FormControlProps>(
             fieldSchema?.tests.some((q) => q.name === 'required') ?? false
           }
         >
-          {!meta?.hideLabel && meta.type !== 'checkbox' && (
+          {!ctx?.hideLabel && meta.type !== 'checkbox' && (
             <FormLabel
               htmlFor={ctx.name}
               fontSize='sm'
               fontWeight='bold'
               color={isDefaultValueFetching ? 'gray.300' : '#202124'}
             >
-              {fieldSchema?.label
-                ? fieldSchema?.label
-                : ctx?.fieldSetting?.label
-                ? ctx?.fieldSetting?.label
-                : t(
-                    `${
-                      router ? router?.pathname : window.location.pathname
-                    }.form.labels.${ctx.name}`
-                  )}
+              {!!fieldSchema?.label ? fieldSchema?.label : ctx?.label}
             </FormLabel>
           )}
           {(() => {
-            switch (meta?.type ?? ctx.fieldSetting?.type) {
+            switch (meta?.type ?? meta?.type) {
               case 'input-text':
               case 'input-mask':
                 return !isDefaultValueFetching ? (
@@ -121,6 +109,25 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     {...{
                       ...formControlMeta,
                       ...(meta?.fieldProps as TextInputProps),
+                    }}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      ctx.onChange!(fixPersianAndArabicNumber(e.target.value));
+                    }}
+                  />
+                ) : (
+                  <TextInputSkeleton
+                    width={(
+                      meta?.fieldProps as TextInputProps
+                    ).width?.toString()}
+                  />
+                );
+              case 'input-password':
+                return !isDefaultValueFetching ? (
+                  <PasswordInput
+                    ref={ref}
+                    {...{
+                      ...formControlMeta,
+                      ...(meta?.fieldProps as PasswordInputProps),
                     }}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       ctx.onChange!(fixPersianAndArabicNumber(e.target.value));
@@ -162,7 +169,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     {...(meta?.fieldProps as CheckboxProps)}
                     {...formControlMeta}
                     checked={formControlMeta.value}
-                    title={fieldSchema?.label}
+                    title={fieldSchema?.label ?? ctx.label}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       ctx.onChange!(e.target.checked, e)
                     }
@@ -205,6 +212,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
                 );
               case 'slider':
                 return (
+                  //@ts-ignore
                   <Slider
                     {...ctx}
                     {...(meta?.fieldProps as SliderProps)}
@@ -248,7 +256,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
                     ref={ref}
                     {...(meta?.fieldProps as AsyncSelectProps)}
                     isInvalid={!!ctx.error}
-                    isDisabled={meta?.isDisabled}
+                    isDisabled={ctx.isDisabled}
                     {...formControlMeta}
                     onChange={(e: any) => {
                       ctx.onChange!(e);
@@ -315,21 +323,12 @@ export const FormControl = forwardRef<any, FormControlProps>(
                 return <Box>Unrecognized field type.</Box>;
             }
           })()}
-          {!!meta?.helperText && (
-            <FormHelperText fontSize='xs'>{meta?.helperText}</FormHelperText>
+          {!!ctx?.helperText && (
+            <FormHelperText fontSize='xs'>{ctx?.helperText}</FormHelperText>
           )}
-          {!!ctx.error && (
+          {!!ctx.error && !ctx.hideError && (
             <FormErrorMessage fontSize='xs'>
-              {t
-                ? formTranslation(ctx.error.type, {
-                    path: t(
-                      `${
-                        router ? router.pathname : window.location.pathname
-                      }.form.labels.${ctx.name}`
-                    ),
-                    value: ctx.value,
-                  })
-                : ctx.error?.message}
+              {ctx.error?.message}
             </FormErrorMessage>
           )}
         </ChakraFormControl>

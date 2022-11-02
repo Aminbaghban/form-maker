@@ -6,13 +6,13 @@ export const TextInput = forwardRef<any, TextInputProps>(({ ...ctx }, ref) => {
   return (
     <Input
       _focus={{ bg: 'white', border: '1px solid #1967D2' }}
+      bg='#f0f5f7'
+      p='6'
+      color='#696969'
       {...ctx}
       onChange={ctx.onChange}
       ref={ref}
       value={ctx.value || ''}
-      bg='#f0f5f7'
-      p='6'
-      color='#696969'
     />
   );
 });

@@ -7,6 +7,7 @@ import { AsyncPaginateProps } from 'react-select-async-paginate';
 import { TreeProps, TreeData } from '@aminbaghbanzadeh/chakra-tree-view';
 import { AxiosResponse } from 'axios';
 import { IProps } from '@tinymce/tinymce-react/lib/cjs/main/ts/components/Editor';
+import { PasswordCheckerProps } from '@aminbaghbanzadeh/password-policies-screen';
 import { SchemaObjectDescription } from 'yup/lib/schema';
 import * as yup from 'yup';
 import { ObjectSchema } from 'yup';
@@ -29,7 +30,7 @@ interface SelectProps extends SelectProps$1 {
     labelProperty?: string;
 }
 
-interface SliderProps extends RangeSliderProps {
+interface SliderProps extends Partial<RangeSliderProps> {
 }
 
 interface SwitchProps extends SwitchProps$1 {
@@ -133,29 +134,28 @@ interface RadioGroupProps extends RadioGroupProps$1 {
     resultFieldName?: string;
 }
 
-declare type FormControlType = 'input-text' | 'input-tag' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor' | 'uploader' | 'reach-select' | 'tree-view' | 'star-picker' | 'radio-group';
-interface FormControlSetting extends FormControlProps$1 {
+interface PasswordInputProps extends InputProps {
+    icon?: IconType;
+    passwordPolicies?: PasswordCheckerProps;
+    showPasswordStatusScreen: boolean;
+}
+
+declare type FormControlType = 'input-text' | 'input-password' | 'input-tag' | 'input-mask' | 'input-number' | 'checkbox' | 'switch' | 'text-area' | 'select' | 'slider' | 'input-pin' | 'editor' | 'uploader' | 'reach-select' | 'tree-view' | 'star-picker' | 'radio-group';
+interface FormControlSetting {
     type: FormControlType;
-    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps | UploaderProps | AsyncSelectProps | TreeViewProps | StartRatingProps | EditorProps | RadioGroupProps;
-    placeHolder?: string;
-    helperText?: string;
-    hideLabel?: boolean;
+    fieldProps?: CheckboxProps | SelectProps | SwitchProps | TextareaProps | TextInputProps | SliderProps | PinInputProps | NumberInputProps | UploaderProps | AsyncSelectProps | TreeViewProps | StartRatingProps | EditorProps | RadioGroupProps | PasswordInputProps;
     valueConverter?: (arg: any) => any;
 }
-interface FormControlProps {
+interface FormControlProps extends Partial<FormControlProps$1> {
     name: string;
     onChange?: (...event: any[]) => void;
     error?: FieldError;
-    onBlur?: any;
     value?: any;
-    hidden?: boolean;
-    mx?: number;
-    my?: number;
-    width?: {
-        base?: string;
-        md?: string;
-    };
     fieldSetting?: FormControlSetting;
+    placeHolder?: string;
+    helperText?: string;
+    hideLabel?: boolean;
+    hideError?: boolean;
 }
 interface ControlledFormControlProps extends FormControlProps {
 }
@@ -176,35 +176,26 @@ interface FormBuilderProps<TFormSchema, TResponse> {
      * pass ControlledFormControl or UncontrolledFormControl as children
      */
     children: React.ReactNode;
-    /**
-     * you must pass translation object such as t in useTranslation in order to use your localization system for
-     * form control labels or place holders or validations messages. Notice that you can still label and it has it hiher priority than translation system.
-     */
-    translation?: any;
-    /**
-     * you must
-     */
-    router?: any;
     onSubmitSucess?: (varibales: TFormSchema) => void;
     onSubmitError?: (errors: FieldErrors<TFormSchema>) => void;
-    onMutateSucess?: (data: TResponse, varibales: TFormSchema) => void;
-    onMutateError?: (error: any) => void;
-    mutationFunction?: (varibales: TFormSchema) => Promise<AxiosResponse<TResponse>>;
+    mutationFunction?: (varibales: TFormSchema) => Promise<AxiosResponse<TResponse>> | void;
     defaultValues?: Partial<TFormSchema>;
-    doesHaveRecaptcha?: boolean;
-    recaptchaApiKey?: string;
+    /**
+     *something like captcha token
+     */
+    extraPropsForMutation?: object;
     /**
      * you can pass this meanwhile you are fetching defaulkt values. During this it shows skeleton for form fields.
      */
     isDefaultValueFetching?: boolean;
+    doesHaveRecaptcha?: boolean;
+    getRecaptcha?: () => Promise<string>;
 }
 
 declare function FormBuilder<TFormSchema extends FieldValues, TResponse>(ctx: PropsWithChildren<FormBuilderProps<TFormSchema, TResponse>>): JSX.Element;
 declare function useAminook(): {
     formSchema: SchemaObjectDescription;
     control: Control<any, any>;
-    translation: any;
-    router: any;
     isLoading: boolean;
     isError: boolean;
     isDefaultValueFetching?: boolean | undefined;

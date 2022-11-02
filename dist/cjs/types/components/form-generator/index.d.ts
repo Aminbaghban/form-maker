@@ -6,8 +6,6 @@ declare function FormBuilder<TFormSchema extends FieldValues, TResponse>(ctx: Pr
 declare function useAminook(): {
     formSchema: SchemaObjectDescription;
     control: Control<any, any>;
-    translation: any;
-    router: any;
     isLoading: boolean;
     isError: boolean;
     isDefaultValueFetching?: boolean | undefined;

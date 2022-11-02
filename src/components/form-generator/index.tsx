@@ -1,17 +1,14 @@
 import { useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { Control, FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { SchemaObjectDescription } from 'yup/lib/schema';
-import { useRecaptcha } from '../../hooks/useRecaptcha';
 import { FormBuilderProps } from './index.types';
 
 const FormBuilderContext = React.createContext<
   | {
       formSchema: SchemaObjectDescription;
       control: Control<any>;
-      translation: any;
-      router: any;
       isLoading: boolean;
       isError: boolean;
       isDefaultValueFetching?: boolean;
@@ -33,19 +30,12 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
   });
 
   /**
-   * define recaptcha
-   */
-  let [getToken] = useRecaptcha(
-    'recaptcha-key',
-    ctx.recaptchaApiKey!,
-    () => {},
-    ctx.doesHaveRecaptcha ?? false
-  );
-
-  /**
    * describe formSchema
    */
-  var formSchema = ctx.formSchema.describe() as SchemaObjectDescription;
+  var formSchema = useMemo(
+    () => ctx.formSchema.describe() as SchemaObjectDescription,
+    []
+  );
 
   const methods = useForm<TFormSchema>({
     mode: ctx.mode ?? 'onSubmit',
@@ -55,44 +45,43 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
 
   const onSubmit = async (data: any) => {
     if (!!ctx.onSubmitSucess) {
-      ctx.onSubmitSucess(data as TFormSchema);
-      return;
-    }
-    if (ctx.doesHaveRecaptcha) {
-      var token = await getToken();
-      data = { ...data, captchaToken: token };
+      ctx.onSubmitSucess(data);
     }
     if (!!ctx.mutationFunction) {
-      setIsLoading(true);
-      ctx
-        .mutationFunction(data)
-        .then((response) => {
-          setIsLoading(false);
-          if (ctx.showToastOnSuccess) {
-            toast({ title: ctx.successToastMessage, status: 'success' });
-          }
-          if (!!ctx.onMutateSucess) {
-            ctx.onMutateSucess(response.data, data);
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          if (!!ctx.onMutateError) {
-            ctx.onMutateError(error);
-          }
-          toast({
-            title: error.code,
-            description: error.message,
-            status: 'error',
-          });
-        });
+      if (ctx.doesHaveRecaptcha) {
+        setIsLoading(true);
+        let token = await ctx.getRecaptcha!();
+        data = { ...data, captchaToken: token };
+        setIsLoading(false);
+      }
+      ctx.mutationFunction(data);
+      // .then((response) => {
+      //   setIsLoading(false);
+      //   if (ctx.showToastOnSuccess) {
+      //     toast({ title: ctx.successToastMessage, status: 'success' });
+      //   }
+      //   if (!!ctx.onMutateSucess) {
+      //     ctx.onMutateSucess(response.data, data);
+      //   }
+      // })
+      // .catch((error) => {
+      //   setIsLoading(false);
+      //   if (!!ctx.onMutateError) {
+      //     ctx.onMutateError(error);
+      //   }
+      //   toast({
+      //     title: error.code,
+      //     description: error.message,
+      //     status: 'error',
+      //   });
+      // });
     }
   };
   const onError = (errors: any) => {
-    if (ctx.onSubmitError) {
-      ctx.onSubmitError(errors);
-      return;
-    }
+    // if (ctx.onSubmitError) {
+    //   ctx.onSubmitError(errors);
+    //   return;
+    // }
   };
 
   useEffect(() => {
@@ -103,8 +92,6 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
       value={{
         formSchema: formSchema,
         control: methods.control,
-        translation: ctx.translation,
-        router: ctx.router,
         isLoading: isLoading,
         isError: false,
         isDefaultValueFetching: ctx.isDefaultValueFetching,

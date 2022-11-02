@@ -1,3 +1,3 @@
 import { RangeSliderProps } from '@chakra-ui/react';
-export interface SliderProps extends RangeSliderProps {
+export interface SliderProps extends Partial<RangeSliderProps> {
 }
