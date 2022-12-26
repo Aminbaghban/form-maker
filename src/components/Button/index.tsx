@@ -1,18 +1,5 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Button as ChakraButton,
-  Collapse,
-  HStack,
-  ListItem,
-  Text,
-  UnorderedList,
-  useDisclosure,
-} from '@chakra-ui/react';
-import React, { FC, useEffect } from 'react';
+import { Button as ChakraButton, useDisclosure } from '@chakra-ui/react';
+import React, { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useAminook } from '../form-generator';
 import { ButtonProps } from './Button.types';
@@ -28,20 +15,18 @@ export const FormSubmitButton: FC<ButtonProps> = ({
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <HStack spacing='6' mt={!!ctx.mt ? ctx.mt : '6'}>
-      <ChakraButton
-        isLoading={isLoading || ctx.isLoading}
-        disabled={isDefaultValueFetching || isLoading || ctx.isLoading}
-        loadingText='در حال ذخیره اطلاعات...'
-        type='submit'
-        variant='primary_dark'
-        fontSize='sm'
-        {...ctx}
-      >
-        {text}
-      </ChakraButton>
+    <ChakraButton
+      isLoading={isLoading || ctx.isLoading}
+      disabled={isDefaultValueFetching || isLoading || ctx.isLoading}
+      loadingText='در حال ذخیره اطلاعات...'
+      type='submit'
+      variant='primary_dark'
+      {...ctx}
+    >
+      {text}
+    </ChakraButton>
 
-      {Object.keys(formState.errors)?.length > 0 && (
+    /* {Object.keys(formState.errors)?.length > 0 && (
         <ChakraButton
           fontSize='sm'
           onClick={onToggle}
@@ -83,7 +68,6 @@ export const FormSubmitButton: FC<ButtonProps> = ({
             </UnorderedList>
           </AlertDescription>
         </Alert>
-      </Collapse>
-    </HStack>
+      </Collapse> */
   );
 };

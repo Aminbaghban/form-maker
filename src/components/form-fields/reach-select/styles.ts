@@ -79,5 +79,14 @@ export const getSelectStyles = (ctx: any) => {
       fontSize: '0.875rem',
       padding: '0.2rem 0.4rem',
     }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      zIndex: '2 !important',
+      marginTop: '0',
+    }),
+    menuList: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: '#f0f5f7',
+    }),
   };
 };

@@ -4,6 +4,7 @@ import { ObjectSchema } from 'yup';
 
 export interface FormBuilderProps<TFormSchema, TResponse> {
   mode?: 'onSubmit' | 'onChange';
+  id?: string;
   showToastOnSuccess?: boolean;
   title?: string;
   successToastMessage?: string;

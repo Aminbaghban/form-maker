@@ -165,6 +165,7 @@ declare const ControlledFormControl: React$1.FC<ControlledFormControlProps>;
 
 interface FormBuilderProps<TFormSchema, TResponse> {
     mode?: 'onSubmit' | 'onChange';
+    id?: string;
     showToastOnSuccess?: boolean;
     title?: string;
     successToastMessage?: string;

@@ -99,6 +99,7 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
     >
       <FormProvider {...methods}>
         <form
+          id={ctx.id}
           noValidate
           style={{ width: '100%' }}
           onSubmit={methods.handleSubmit(onSubmit, onError)}

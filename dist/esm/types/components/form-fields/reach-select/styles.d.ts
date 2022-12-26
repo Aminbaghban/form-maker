@@ -8,4 +8,6 @@ export declare const getSelectStyles: (ctx: any) => {
     loadingMessage: (provided: any, state: any) => any;
     noOptionsMessage: (provided: any, state: any) => any;
     multiValue: (provided: any, state: any) => any;
+    menu: (provided: any, state: any) => any;
+    menuList: (provided: any, state: any) => any;
 };
