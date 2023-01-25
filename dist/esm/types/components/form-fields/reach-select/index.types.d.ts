@@ -13,14 +13,16 @@ export interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, Group
     fetchUrl?: string;
     valueProperty?: string;
     labelProperty?: string;
-    searchQueryFieldName?: string;
-    offsetQueryFieldName?: string;
     resultFieldName?: string;
     totalCountFieldName?: string;
     isInvalid?: boolean;
     isDisabled?: boolean;
     isCreatable?: boolean;
     backgroundColor?: string;
+    dependentTo?: {
+        fieldName: string;
+        valueExtractor: (value: any) => string | string[];
+    };
 }
 export interface TagInputProps extends Omit<CreatableProps<SelectOption, true, GroupBase<SelectOption>>, 'onChange'> {
     isInvalid?: boolean;

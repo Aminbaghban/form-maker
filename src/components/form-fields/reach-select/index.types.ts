@@ -21,14 +21,16 @@ export interface AsyncSelectProps
   fetchUrl?: string;
   valueProperty?: string;
   labelProperty?: string;
-  searchQueryFieldName?: string;
-  offsetQueryFieldName?: string;
   resultFieldName?: string;
   totalCountFieldName?: string;
   isInvalid?: boolean;
   isDisabled?: boolean;
   isCreatable?: boolean;
   backgroundColor?: string;
+  dependentTo?: {
+    fieldName: string;
+    valueExtractor: (value: any) => string | string[];
+  };
 }
 
 export interface TagInputProps

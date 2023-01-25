@@ -1,32 +1,52 @@
 import { Text, HStack, Spinner } from '@chakra-ui/react';
 import axios from 'axios';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useCallback, useEffect } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { AsyncSelectProps } from './index.types';
 import { getSelectStyles } from './styles';
 import Creatable from 'react-select/creatable';
 import { withAsyncPaginate } from 'react-select-async-paginate';
 import { SearchIcon } from '@chakra-ui/icons';
+import { useWatch } from 'react-hook-form';
+import { compile } from 'path-to-regexp';
+
 const CreatableAsyncPaginate = withAsyncPaginate(Creatable);
 export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
   ({ ...ctx }, ref) => {
-    const loadOptions = async (inputValue: string, loadedOptions: any) => {
-      const response = await axios.get(
-        `${ctx.fetchUrl!}${ctx.searchQueryFieldName}=${inputValue}&${
-          ctx.offsetQueryFieldName ?? 'SkipCount'
-        }=${loadedOptions.length}`
-      );
+    const dependentValue = useWatch({
+      name: ctx.dependentTo?.fieldName || '',
+      disabled: !ctx.dependentTo,
+    });
 
-      return {
-        options: Array.isArray(response.data)
-          ? response.data
-          : response.data[ctx.resultFieldName ?? 'items'],
-        hasMore: Array.isArray(response.data)
-          ? response.data.length > loadedOptions.length
-          : response.data[ctx.totalCountFieldName ?? 'totalCount'] >
-            loadedOptions.length,
-      };
-    };
+    const loadOptions = useCallback(
+      async (inputValue: string, loadedOptions: any) => {
+        // const response = await axios.get(
+        //   `${ctx.fetchUrl!}${ctx.searchQueryFieldName}=${inputValue}&${
+        //     ctx.offsetQueryFieldName ?? 'SkipCount'
+        //   }=${loadedOptions.length}`
+        // );
+        const response = await axios.get(
+          ctx
+            .fetchUrl!.replace(':query', inputValue)
+            .replace(':offsetCount', loadedOptions.length)
+            .replace(
+              ':dependent',
+              ctx.dependentTo?.valueExtractor(dependentValue) as string
+            )
+        );
+
+        return {
+          options: Array.isArray(response.data)
+            ? response.data
+            : response.data[ctx.resultFieldName ?? 'items'],
+          hasMore: Array.isArray(response.data)
+            ? response.data.length > loadedOptions.length
+            : response.data[ctx.totalCountFieldName ?? 'totalCount'] >
+              loadedOptions.length,
+        };
+      },
+      [dependentValue]
+    );
 
     if (ctx.isCreatable) {
       return (
@@ -78,6 +98,12 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
           LoadingIndicator: () => <Spinner size='sm' colorScheme='blue' />,
         }}
         {...ctx}
+        isDisabled={!!ctx.dependentTo ? !dependentValue : false}
+        key={
+          !!ctx.dependentTo
+            ? (ctx.dependentTo.valueExtractor(dependentValue) as string)
+            : ctx.name
+        }
         loadOptions={loadOptions}
       />
     );

@@ -3,6 +3,7 @@ import { Button, Collapse, useDisclosure } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { TreeViewProps } from './index.types';
+import { TreeSkeleton } from './skeleton';
 
 export const TreeView: React.FC<TreeViewProps> = ({ ...ctx }) => {
   const [data, setData] = useState();
@@ -21,10 +22,14 @@ export const TreeView: React.FC<TreeViewProps> = ({ ...ctx }) => {
         </Button>
       )}
       <Collapse in={ctx.inline ? true : isOpen} animateOpacity>
-        <Tree
-          {...ctx}
-          data={!!ctx.data ? ctx.data : ctx.treeDataTransformer!(data)}
-        />
+        {!!ctx.data ||
+          (!!data && (
+            <Tree
+              {...ctx}
+              data={!!ctx.data ? ctx.data : ctx.treeDataTransformer!(data)}
+            />
+          ))}
+        {!data && !ctx.data && <TreeSkeleton />}
       </Collapse>
     </>
   );
