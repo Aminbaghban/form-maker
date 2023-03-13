@@ -301,7 +301,15 @@ export const FormControl = forwardRef<any, FormControlProps>(
                 return (
                   <RadioGroup
                     {...(meta?.fieldProps as RadioGroupProps)}
-                    {...formControlMeta}
+                    // {...{
+                    //   formControlMeta,
+                    //   value:
+                    //     formControlMeta.value === null
+                    //       ? undefined
+                    //       : formControlMeta.value,
+                    // }}
+                    name={ctx.name}
+                    value={ctx.value}
                     onChange={(e: any) => {
                       ctx.onChange!(e);
                     }}

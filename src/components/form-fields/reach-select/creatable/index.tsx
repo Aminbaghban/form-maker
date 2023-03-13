@@ -73,6 +73,8 @@ export const TagInput = forwardRef<any, TagInputProps>(({ ...ctx }, ref) => {
       onInputChange={handleInputChange}
       onKeyDown={handleKeyDown}
       value={values}
+      formatCreateLabel={(input: string) => `درج " ${input} "`}
+      allowCreateWhileLoading={true}
     />
   );
 });

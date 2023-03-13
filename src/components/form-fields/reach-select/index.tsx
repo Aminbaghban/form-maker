@@ -1,14 +1,12 @@
-import { Text, HStack, Spinner } from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
+import { HStack, Spinner, Text } from '@chakra-ui/react';
 import axios from 'axios';
-import React, { forwardRef, useCallback, useEffect } from 'react';
-import { AsyncPaginate } from 'react-select-async-paginate';
+import React, { forwardRef, useCallback } from 'react';
+import { useWatch } from 'react-hook-form';
+import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
+import Creatable from 'react-select/creatable';
 import { AsyncSelectProps } from './index.types';
 import { getSelectStyles } from './styles';
-import Creatable from 'react-select/creatable';
-import { withAsyncPaginate } from 'react-select-async-paginate';
-import { SearchIcon } from '@chakra-ui/icons';
-import { useWatch } from 'react-hook-form';
-import { compile } from 'path-to-regexp';
 
 const CreatableAsyncPaginate = withAsyncPaginate(Creatable);
 export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
@@ -20,11 +18,6 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
 
     const loadOptions = useCallback(
       async (inputValue: string, loadedOptions: any) => {
-        // const response = await axios.get(
-        //   `${ctx.fetchUrl!}${ctx.searchQueryFieldName}=${inputValue}&${
-        //     ctx.offsetQueryFieldName ?? 'SkipCount'
-        //   }=${loadedOptions.length}`
-        // );
         const response = await axios.get(
           ctx
             .fetchUrl!.replace(':query', inputValue)
@@ -34,7 +27,6 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
               ctx.dependentTo?.valueExtractor(dependentValue) as string
             )
         );
-
         return {
           options: Array.isArray(response.data)
             ? response.data

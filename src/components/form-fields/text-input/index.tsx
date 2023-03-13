@@ -7,7 +7,7 @@ export const TextInput = forwardRef<any, TextInputProps>(({ ...ctx }, ref) => {
     <Input
       _focus={{ bg: 'white', border: '1px solid #1967D2' }}
       bg='#f0f5f7'
-      p='6'
+      p='1.36rem'
       color='#696969'
       {...ctx}
       onChange={ctx.onChange}

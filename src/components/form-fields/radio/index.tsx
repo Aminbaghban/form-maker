@@ -28,10 +28,15 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({ ...ctx }) => {
     }
   }, [ctx.fetchUrl]);
   return (
-    <ChakraRadioGroup {...ctx} mt='4' value={ctx.value} onChange={ctx.onChange}>
+    <ChakraRadioGroup
+      mt='4'
+      value={ctx.value || undefined}
+      onChange={ctx.onChange}
+      name={ctx.name}
+    >
       <Stack spacing={2}>
         {options?.map((q) => (
-          <Radio {...ctx.radioProps} key={q.value} value={q.value?.toString()}>
+          <Radio {...ctx.radioProps} key={q.value} value={q.value.toString()}>
             {q.label}
           </Radio>
         ))}
@@ -41,14 +46,9 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({ ...ctx }) => {
             .map((q, index) => (
               <HStack key={index}>
                 <SkeletonCircle boxSize='20px' />
-                <Skeleton h='10' w='48' />
+                <Skeleton h='5' w='48' />
               </HStack>
             ))}
-        {!!options && !!ctx.value && (
-          <Radio {...ctx.radioProps} key={'init'} value={''}>
-            تفاوتی ندارد
-          </Radio>
-        )}
       </Stack>
     </ChakraRadioGroup>
   );

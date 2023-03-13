@@ -43,6 +43,7 @@ export const getSelectStyles = (ctx: any) => {
       paddingRight: '0.5rem',
       fontFamily: 'inherit !important',
       fontSize: '0.875rem',
+      backgroundColor: state.isSelected ? '#0385ff' : '#f0f5f7',
       '&:hover': {
         ...provided,
         fontSize: '0.875rem',
