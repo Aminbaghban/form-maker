@@ -83,7 +83,12 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
     //   return;
     // }
   };
-
+  useEffect(() => {
+    if (!!ctx.defaultValues) {
+      //@ts-ignore
+      methods.reset(ctx.defaultValues);
+    }
+  }, [ctx.defaultValues]);
   useEffect(() => {
     return () => methods.reset();
   }, []);
