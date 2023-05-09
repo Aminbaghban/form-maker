@@ -1,6 +1,6 @@
 {
   "name": "@aminbaghbanzadeh/form-maker",
-  "version": "1.3.68",
+  "version": "1.3.71",
   "description": "This is simple form generator based on Chakra UI and yup by simply passing yup schema if you want more information please be in touch with me by my email address aminslkbgh@gmail.com",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -47,6 +47,7 @@
     "react-input-mask": "^2.0.4",
     "react-select": "^5.4.0",
     "react-select-async-paginate": "^0.6.2",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "fast-deep-equal": "^3.1.3"
   }
 }

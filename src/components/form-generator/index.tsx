@@ -1,9 +1,15 @@
-import { useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Control, FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { SchemaObjectDescription } from 'yup/lib/schema';
 import { FormBuilderProps } from './index.types';
+import isDeepEqual from 'fast-deep-equal/react';
 
 const FormBuilderContext = React.createContext<
   | {
@@ -20,14 +26,12 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
   ctx: PropsWithChildren<FormBuilderProps<TFormSchema, TResponse>>
 ) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  /**
-   * 3rd party hooks
-   */
-  let toast = useToast({
-    position: 'top',
-    isClosable: true,
-    variant: 'top-accent',
-  });
+  const defaultValuesRef = useRef<Partial<TFormSchema> | undefined>(
+    ctx.defaultValues
+  );
+  if (!isDeepEqual(defaultValuesRef.current, ctx.defaultValues)) {
+    defaultValuesRef.current = ctx.defaultValues;
+  }
 
   /**
    * describe formSchema
@@ -55,6 +59,7 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
         setIsLoading(false);
       }
       ctx.mutationFunction(data);
+
       // .then((response) => {
       //   setIsLoading(false);
       //   if (ctx.showToastOnSuccess) {
@@ -76,6 +81,7 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
       //   });
       // });
     }
+    //methods.reset();
   };
   const onError = (errors: any) => {
     // if (ctx.onSubmitError) {
@@ -84,14 +90,15 @@ function FormBuilder<TFormSchema extends FieldValues, TResponse>(
     // }
   };
   useEffect(() => {
+    console.log('test', methods);
     if (!!ctx.defaultValues) {
       //@ts-ignore
       methods.reset(ctx.defaultValues);
     }
-  }, [ctx.defaultValues]);
-  useEffect(() => {
-    return () => methods.reset();
-  }, []);
+  }, [defaultValuesRef.current]);
+  // useEffect(() => {
+  //   return () => methods.reset();
+  // }, []);
   return (
     <FormBuilderContext.Provider
       value={{
