@@ -80,6 +80,7 @@ interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, GroupBase<Se
         fieldName: string;
         valueExtractor: (value: any) => string | string[];
     };
+    requestHeaders?: object;
 }
 
 interface TreeViewProps extends TreeProps {

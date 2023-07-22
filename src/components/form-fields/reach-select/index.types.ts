@@ -31,6 +31,7 @@ export interface AsyncSelectProps
     fieldName: string;
     valueExtractor: (value: any) => string | string[];
   };
+  requestHeaders?: object;
 }
 
 export interface TagInputProps

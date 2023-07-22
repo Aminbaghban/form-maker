@@ -23,6 +23,7 @@ export interface AsyncSelectProps extends AsyncPaginateProps<SelectOption, Group
         fieldName: string;
         valueExtractor: (value: any) => string | string[];
     };
+    requestHeaders?: object;
 }
 export interface TagInputProps extends Omit<CreatableProps<SelectOption, true, GroupBase<SelectOption>>, 'onChange'> {
     isInvalid?: boolean;

@@ -21,6 +21,7 @@ export const Slider: React.FC<SliderProps> = ({ ...ctx }) => {
         max={ctx.max}
         defaultValue={ctx.defaultValue}
         {...ctx}
+        value={ctx.value ?? value}
         width='full'
         onChangeEnd={(val) => {
           setValue(val);

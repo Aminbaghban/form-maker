@@ -37,8 +37,8 @@ export const inherentNumberString = string().transform(
 export const selectWithValueExtractor = () =>
   number().transform((currentValue, originalValue) =>
     !!currentValue
-      ? currentValue.value
+      ? currentValue?.value
       : !!originalValue
-      ? originalValue.value
+      ? originalValue?.value
       : null
   );

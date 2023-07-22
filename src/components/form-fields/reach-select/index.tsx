@@ -25,7 +25,10 @@ export const AsyncSelect = forwardRef<any, AsyncSelectProps>(
             .replace(
               ':dependent',
               ctx.dependentTo?.valueExtractor(dependentValue) as string
-            )
+            ),
+          {
+            ...(!!ctx.requestHeaders && { headers: { ...ctx.requestHeaders } }),
+          }
         );
         return {
           options: Array.isArray(response.data)
